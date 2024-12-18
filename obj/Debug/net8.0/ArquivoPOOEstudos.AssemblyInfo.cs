@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ArquivoPOOEstudos")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+03ed31eccd0a5042242564e5feaf94007dd2410a")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+46891c16347e77b367312eb890ee7839a4cbcb0d")]
 [assembly: System.Reflection.AssemblyProductAttribute("ArquivoPOOEstudos")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ArquivoPOOEstudos")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
