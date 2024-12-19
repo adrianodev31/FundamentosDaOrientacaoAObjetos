@@ -337,8 +337,143 @@ namespace ArquivoPOOEstudos // Note: actual namespace depends on the project nam
 
             //USING E DISPOSE=====================================================================================================
             /*
-                ver aula
+                
+                - Garbage collector -> como o C# é uma linguagem gerenciada, quando tenho algo que não estou usando, variavel, algo nulo, o c# exclui da memoria
+                - sempre que acessamos o banco de dados, o banco tem um limite de 5 conexões ao mesmo tempo, por exemplo, então é de muita importância garantiar que eu entrei no db, peguei o que queria, e encerrei a conexão
+                - nesse caso temos o metodo "destrutor"
+
+                public class Pagamento : IDisposable            >> caso precise, implemente interface
+                {
+                    public Pagamento()
+                    {
+                        Console.WritelWriteLine("iniciando o pagamento");
+                    }
+
+                    public void Dispose()               >> metodo que é chamado quando to destruindo um objeto
+                    {
+                       Console.WriteLine("Finalizando o pagamento");
+                    }
+                }
+
+
+                **USANDO!!
+                    var pagamento = new Pagamento();
+                    pagamento.Dispose();    >> aqui ele iniciaria o construtor, daria a mensagem, em seguida destruiria o metodo, daria a mensagem, mas é de grande chance o programador esquecer de usar esse codigo
+                                            >> para isso, em vez disso, use o using, abaixo:
+                    faça assim: dentro do metodo Main
+
+                        using (var pagamento = new Pagamento())     >> assim ele automaticamente abre e fecha o dispose
+                        {
+                            Console.WriteLine("Processando o pagamento...");
+                        }
+
+
+                o resultado no console será:
+                    - iniciando o pagamento
+                    - Processando o pagamento...
+                    - Finalizando o pagamento
+
+                    ele passa pelo construtor, pelo using, e finaliza no dispose
+                                      
+
             */
+
+            //CLASSES ESTÁTICAS =============================================================================================
+            /*
+                - toda classe com static NÃO pode ser instanciada (com aquele new)
+                - classe estatica, metodo estatico, propriedades estaticas
+                - Quando usar ?: quando eu tenho classes que não mudam muito, que sempre uso sem alterar, tipo configurações, eu uso
+                - Uma classe como pagamento mesmo, provavelmente não vou usar static
+                - o balta mesmo usa uma classe setting que dentro ele passa API_URL
+                - uma vez criada com static, a classe vai dar a mesma informação a todos, sem o static cada new Pagamento, é um pagamento novo por exemplo, diferente para cada usuario
+                ex:
+                    public static class Pagamento
+                    {
+                        public static DateTime Vencimento {get; set;}  
+                    }
+                
+                **USANDO!!
+                        Pagamento.Vencimento = DateTime.Now;
+
+            */
+
+            //CLASSES SELADAS ====================================================================================================================
+            /*
+                - Num cenário onde eu quero que uma classe NÃO SEJA HERDADA de forma alguma
+                ex: 
+                    public sealed class Pagamento   >> isso bloqueia herança!
+                    {
+                        public DateTime Vencimento { get; set; }    
+                    } 
+            
+            
+            */
+
+            //PARTIAL CLASS ======================================================================================================================
+            /*
+                - se eu tenho uma classe, que dentro tem muito muito codigo, e uma parte faz algo sobre regra de negocios por exemplo, e outra parte faz outra, eu posso repartir
+                >> crio 2 arquivos separados, e faço o mesmo namespace em cada, com "partial" no nome na classe
+                ex: 2 arquivos com exatamente a mesma estrutura, e ao compilar ele junta tudo
+
+                        namespace Payments
+                        {
+                            public partial class Payment
+                            {
+                                public int PropriedadeA { get; set; }   >> no outro arquivo posso por PropriedadeB
+                            }
+                        
+                        }
+
+
+                        **USANDO 
+                        var payment = new Payment();
+                        payment.PropriedadeA = 1;
+                        payment.PropriedadeB = 2;
+                        ou só payment.PropriedadeA;
+            */
+            //INTERFACES (SEMPRE SEMPRE USE INTERFACES, PENSE BEM NELAS======================================================================================================================
+            /*
+                - toda vez que definimos uma interface, é como se fosse um contrato, é COMO UMA CLASSE DEVE SER !
+                - toda interface começa com I
+                - no ex abaixo, tudo que eu definiri em interface, metodos, propriedades etc, a classe Pagamento TEM que seguir obrigatoriamente.
+                - não precisa de modificadores de acesso na interface
+                - implement é ctrl + .
+
+                    ex: 
+
+                        public interface IPagamento
+                        {
+                            DateTime Vencimento { get; set; }       >> defini que ele precisa ter essa propriedade em classe
+
+                            void Pagar(double valor);       >> defini um metodo, sem as chaves aqui!!
+                        }
+
+
+
+                        public class Pagamento : IPagamento     >> se eu não seguir o "contrato" da interface, IPagamento vai ficar vermelhinho embaixo
+                        {
+                            public Datetime Vencimento { get; set;}
+
+                            public void Pagar(double valor)
+                            {
+                            
+                            }
+                        }
+
+                        obs: ai caso for criar outra classe de pagamento que use a mesma interface!!!
+                        
+                        public class PagamentoCartaoCredito : IPagamento {
+                            public Datetime Vencimento { get; set;}
+
+                            public void Pagar(double valor)
+                            {
+                            
+                            }
+                        }
+
+            */
+
+            //CLASSES ABSTRATAS===========================================================================================================================
 
 
 
