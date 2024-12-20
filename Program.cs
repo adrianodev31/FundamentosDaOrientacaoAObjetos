@@ -474,8 +474,151 @@ namespace ArquivoPOOEstudos // Note: actual namespace depends on the project nam
             */
 
             //CLASSES ABSTRATAS===========================================================================================================================
+            /*
+            - Classes com "abstract" não podem ser instanciadas com o "new" 
+            - só faz sentido instanciar os "filhos" das classes abstratas!
+            - serve apenas de BASE para as filhas
+
+            //ESSA CLASSE É UMA CLASSE ABSTRATA, POIS NGM USA SÓ O PAGAMENTO DIRETAMENTE, ELA É O PAI DAS PROXIMAS, HERDA UM CONTRATO DE UMA INTERFACE
+            public abstract class Pagamento : IPagamento
+            {
+                public DateTime Vencimento { get; set; }
+
+                public virtual void Pagar(double valor)
+            }
+
+                    
+            */
 
 
+            //UPCAST E DOWNCAST============================================================================================================================
+            /*
+                - Posso reeinstanciar Pessoa para as filhas, depois de declarada, filhas tbm são pais, pke herdam tudo de pai e mais
+                EX:
+                    UPCAST
+                    var pessoa = new Pessoa();
+                    pessoa = new PessoasFisica();
+                    pessoa = new PessoaJuridica();    
+            */
+
+            //COMPARANDO OBJETOS ==========================================================================================================================
+            /*
+                - COMPARAR OBJETOS COM == DA FALSE - porque objetos guardam a referênsia somente
+                - A MENEIRA CORRETA DE COMPARAR OBJETOS É USANDO A INTERFACE NA CLASSE >>> : IEquatable<Pessoa> E CTRL + . >> VAI GERAR O METODO EQUALS DENTRO DA CLASSE
+
+                var pessoaA = new pessoa(1, "Adriano");
+                var pessoaB = new pessoa(1, "Adriano");
+
+                Console.WriteLine(pessoaA == PessoaB);  >> isso resulta em false!!!
+            
+                public class Pessoa : IEquatable<Pessoa>
+                {
+                    public Pessoa(int id, string pessoa)
+                    {   
+                        Id = id;
+                        Nome = nome;
+                    }
+
+                    public int Id { get; set; }
+
+                    public string Nome { get; set; }
+
+
+                    //ctrl + . implemente interface vai gerar esse metodo dentro da classe
+                    public bool Equals(Pessoa pessoa)
+                    {
+                       return Id == pessoa.Id;
+                    }
+                
+                }
+
+
+                >>DEPOIS DISSO, SE EU COMPRAR PESSOAa COM PESSOAb VAI DAR TRUE
+                Console.WriteLine(pessoaA == PessoaB);  >> isso resulta em FALSE ainda kkk, mas faz assim agora: abaixo!!!
+                - Console.WriteLine(pessoaA.Equal(pessoaB));
+                    Isso resulta em true kkk
+
+                obs: o == NUNCA vai funcionar, só o Equals assim
+            */
+
+            //DELEGATES || Anonynous methods =================================================================================================================
+            /*
+                - O nome em si ja diz, delegação, "vou delegar para alguém fazer..."
+
+                EX:
+                    public class Pagamento
+                    {
+                        public delegate void Pagar(double valor);
+                    }
+
+                    static void RealizarPagamento(double valor)
+                    {
+                        Console.WriteLine($"Pago o valor de {valor}");
+                    }
+
+                    **AGORA DENTRO DO MAIN (mas poderia ser em outra classe qualquer.)
+
+                    //aqui to tipo dizendo: Passa o pagamento pro RealizarPagamento fazer o corre rs
+                    var ágar = new Pagamento.Pagar(RealizarPagamento);
+                    pagar(25);
+                    resultado disso: Pago o valor de 25
+
+            
+            */
+
+            //EVENTS ======================================================================================================================================
+            /*
+                - 
+
+                ex:
+
+                public class Sala
+                {
+                    public Sala(int assentos){
+                        Assentos = assentos;
+                        assentosEmUso = 0;
+                    }
+
+                    private int assentosEmUso = 0;
+
+                    public int Assentos { get; set; }
+
+                    public void ReservaDeAssento()
+                    {
+                        assentoEmUso++;
+                        if(assentoEmUso >= Assentos){
+                            OnSalaCheia(EventArgs.Empty);   >>empty pke n tenho nada pra passar, mas poderia passar
+                        }else {
+                            Console.WriteLine("Assento Reservado com sucesso");
+                        }
+                    }
+
+                }
+
+                //esse evento vai ser chamado, quando a sala tiver sido completada, cheia
+                public event EventHandler SalaCheiaEvent;
+
+                //evento criado logo acima, executado AQUI
+                protected virtual void OnSalaCheia(EventArgs e)
+                {
+                    EventHandler handler = SalaCheiaEvent;
+                    handler?.Invoke(this, e)    >> se refere ao objeto sala
+                }
+
+                static void SalaCheia(object sender, EventArgs e)
+                {
+                    Console.WriteLine("Sala lotada");
+                }
+
+
+                **DENTRO DO MAIN...
+                    var sala = new Sala(3);
+                    sala.SalaCheia += SalaCheiaEvent;
+                    sala.ReservaDeAssento();
+            
+            */
+
+            //GENERICS PT 1 =======================================================================================================================
 
         }
     }
